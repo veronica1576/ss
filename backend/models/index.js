@@ -1,26 +1,54 @@
 
-const Sequelize = require('sequelize');
-const UserModel = require('./user.js');
-const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
+const UserModel = require('./users.js');
+const FilmModel = require('./films.js');
 
-const sequelize = new Sequelize('railway', 'postgres', 'LQg9eoaqGR8HFlQuA3q9', {
-    host: 'containers-us-west-125.railway.app',
-    port: '6180',
-    dialect: 'postgres'
+
+//MongoDB Connection
+const DB_URL = "mongodb://mongo:LnDIWjXANDZm1tZDXOeT@containers-us-west-108.railway.app:7457";
+
+
+const mongoConnection = mongoose.connect(DB_URL, {
+    keepAlive: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+},
+
+
+    //(e)=>{
+    //    if(e){
+    //        console.error('DB: ERROR !!');
+
+    //    }else{
+    //        console.log('Conexion Correcta !!');
+    //    }
+    //}
+
+);
+
+//Evento de conexion exitosa
+mongoose.connection.on('connected', () => {
+    console.log('Conexion exitosa a la base de datos MongoDB');
 });
 
-const User = UserModel(sequelize, Sequelize);
+//Evento error de conexion
+mongoose.connection.on('error', (err)=>{
+    console.error('Error de conexion a MongoDB:', Eerr)
+});
 
-//sequelize.sync({force: false}) -> nos ayuda a sincronizar las tablas
+//Evento de desconexion
+mongoose.connection.on('disconnected', ()=>{
+    console.log('Desconectado d ela base de datos MongoDB');
+});
 
-sequelize.sync({force: false})
-    .then(()=>{
-        console.log('Tablas sincronizadas');
-    });
+const User = UserModel;
+const Film = FilmModel;
 
 
 module.exports = {
+    //Exportar el modelo
     User,
+    Film,
 }
 
 //INSTALACIONES: 
